@@ -1,0 +1,453 @@
+﻿<style>
+p, span {font-family:Calibri; font-weight:bold; font-size:40pt; color:red; text-align:left; margin-bottom:15px; margin-top:15px; padding-left:10pt}
+p.instruction {color:black; font-size:18pt; }
+p img {vertical-align:bottom;}
+input {text-align:center; width:120px; height:120px; border-radius:60px; font-size:14pt;}
+div.btn {text-align:center; padding-top:20px}
+span {color:red;}
+</style>
+<div style='width:480px; margin:auto; text-align:center'>
+<span> Level <span id='levelNumber'>1</span> <img id='instruction_btn' src='image/593.png' width='30' title='show / hide instruction' onclick="if(instruction.style.visibility=='hidden') instruction.style.visibility='visible'; else instruction.style.visibility='hidden'"></span>
+<canvas id="example"> </canvas>
+<div id='instruction' style='position:absolute; top:70px; width:480px; background-color:white; border:1px dashed red; opacity:0.9; visibility:hidden'>
+<p> MOVE: <img src='image/up.png'><img src='image/down.png'><img src='image/left.png'><img src='image/right.png'> </p> 
+<p> TASK:  <span style='color:black'> Place boxes on red buttons </span></p>
+</div>
+<div class='btn'>
+<img src='image/back.png' align="middle" onclick="if(level!=1){level--; begining()}" id='back'><input type='button' value='RESTART' id='restart'>  </input><img src='image/forward.png' align="middle" onclick="if(level!=21){level++; begining()}" id='forward'>
+</div>
+</div>
+
+<script>
+level=1;
+
+kirpic = new Image();
+kirpic.src = "image/kirpich_new_small.jpg";
+
+box = new Image();
+box.src = "image/boxes.png";
+
+goal = new Image();
+goal.src = "image/red_dot_small.png";
+
+pers = new Image();
+pers.src = "image/pers.png";
+
+window.onload = function() {
+canvas = document.getElementById("example")
+context = canvas.getContext("2d")
+document.body.onkeydown = move
+restart.onclick = begining
+begining();
+}
+
+function begining() {
+
+levelNumber.innerHTML=level;
+
+if(level==1) {
+back.style.visibility = "hidden";
+}
+
+else back.style.visibility = "visible";
+
+if(level==21) {
+forward.style.visibility = "hidden";
+}
+
+else forward.style.visibility = "visible";
+
+if(level==1) {
+canvas.width=480
+canvas.height=420
+obst = new Array(60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 60, 60, 360, 60, 420, 120, 420, 180, 360, 360, 300, 360, 240, 360, 180, 360, 120, 360, 60, 360, 0, 360, 420, 360, 420, 300, 420, 240, 420, 60, 0, 300, 0, 240, 0, 180, 0, 120, 60, 120, 180, 120, 240, 120, 180, 240);
+korob = new Array(240, 180, 300, 120, 240, 240)
+d = new Array(120, 120, 120, 180, 180, 180)
+main1 = new main(360, 180)
+}
+
+if(level==2) {
+canvas.width = 360;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 360, 60, 360, 120, 360, 180, 360, 240, 360, 300, 360, 300, 60, 300, 120, 300, 180, 300, 240, 300, 300, 300, 360, 120, 120, 120, 240);
+korob = new Array(240, 120, 180, 180, 180, 240)
+d = new Array(240, 120, 180, 240, 180, 60)
+main1 = new main(240, 300)
+}
+
+if(level==3) {
+canvas.width = 480;
+canvas.height = 480;
+obst = new Array(120, 0, 180, 0, 240, 0, 300, 0, 60, 60, 120, 60, 300, 60, 360, 60, 0, 120, 60, 120, 360, 120, 0, 180, 360, 180, 420, 180, 0, 240, 420, 240, 0, 300, 60, 300, 120, 300, 420, 300, 300, 300, 120, 360, 180, 360, 420, 360, 180, 420, 240, 420, 300, 420, 360, 420, 420, 420);
+korob = new Array(300, 180, 180, 240, 240, 300)
+d = new Array(120, 180, 240, 180, 240, 300)
+main1 = new main(240, 240)
+}
+
+if(level==4) {
+canvas.width = 420;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 0, 60, 360, 60, 0, 120, 360, 120, 0, 180, 360, 180, 0, 240, 60, 240, 300, 240, 360, 240, 60, 300, 300, 300, 60, 360, 120, 360, 180, 360, 240, 360, 300, 360, 180, 120);
+korob = new Array(240, 60, 120, 180, 180, 180)
+d = new Array(120, 60, 240, 60, 180, 180)
+main1 = new main(60, 180)
+}
+
+if(level==5) {
+canvas.width = 480;
+canvas.height = 480;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 420, 0, 0, 60, 240, 60, 420, 60, 0, 120, 420, 120, 0, 180, 60, 180, 180, 180, 240, 180, 420, 180, 60, 240, 240, 240, 420, 240, 60, 300, 420, 300, 60, 360, 240, 360, 300, 360, 360, 360, 420, 360, 60, 420, 120, 420, 180, 420, 240, 420);
+korob = new Array(300, 120, 120, 180, 120, 300)
+d = new Array(300, 180, 360, 180, 180, 240)
+main1 = new main(120, 120)
+}
+
+if(level==6) {
+canvas.width = 540;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 0, 60, 240, 60, 300, 60, 360, 60, 420, 60, 480, 60, 0, 120, 120, 120, 480, 120, 0, 180, 360, 180, 480, 180, 0, 240, 60, 240, 240, 240, 480, 240, 60, 300, 120, 300, 360, 300, 420, 300, 480, 300, 120, 360, 180, 360, 240, 360, 300, 360, 360, 360);
+korob = new Array(180, 120, 180, 240, 360, 240)
+d = new Array(300, 120, 300, 180, 300, 240)
+main1 = new main(60, 60)
+}
+
+if(level==7) {
+canvas.width = 420;
+canvas.height = 420;
+obst = new Array(60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 0, 60, 60, 60, 360, 60, 0, 120, 240, 120, 360, 120, 0, 180, 360, 180, 0, 240, 180, 240, 300, 240, 360, 240, 0, 300, 60, 300, 300, 300, 60, 360, 120, 360, 180, 360, 240, 360, 300, 360);
+korob = new Array(120, 120, 180, 180, 240, 240)
+d = new Array(240, 60, 120, 120, 120, 180)
+main1 = new main(180, 300)
+}
+
+if(level==8) {
+canvas.width = 420;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 0, 60, 360, 60, 0, 120, 120, 120, 240, 120, 360, 120, 0, 180, 360, 180, 0, 240, 300, 240, 360, 240, 0, 300, 180, 300, 240, 300, 300, 300, 0, 360, 60, 360, 120, 360, 180, 360);
+korob = new Array(240, 180, 120, 240, 180, 240)
+d = new Array(180, 60, 180, 120, 60, 240)
+main1 = new main(240, 60)
+}
+
+if(level==9) {
+canvas.width = 420;
+canvas.height = 480;
+obst = new Array(180, 0, 240, 0, 300, 0, 360, 0, 0, 60, 60, 60, 120, 60, 180, 60, 360, 60, 0, 120, 360, 120, 0, 180, 360, 180, 0, 240, 60, 240, 240, 240, 300, 240, 360, 240, 60, 300, 240, 300, 60, 360, 240, 360, 60, 420, 120, 420, 180, 420, 240, 420);
+korob = new Array(180, 120, 240, 120, 120, 300)
+d = new Array(180, 120, 180, 240, 180, 360)
+main1 = new main(300, 60)
+}
+
+if(level==10) {
+canvas.width = 480;
+canvas.height = 480;
+obst = new Array(0, 0, 60, 0, 120, 0, 300, 0, 360, 0, 420, 0, 0, 60, 120, 60, 180, 60, 240, 60, 300, 60, 420, 60, 0, 120, 120, 120, 420, 120, 0, 180, 420, 180, 0, 240, 420, 240, 0, 300, 180, 300, 420, 300, 0, 360, 180, 360, 240, 360, 300, 360, 360, 360, 420, 360, 0, 420, 60, 420, 120, 420, 180, 420);
+korob = new Array(120, 180, 180, 180, 180, 240)
+d = new Array(60, 60, 360, 60, 360, 120)
+main1 = new main(360, 180)
+}
+
+if(level==11) {
+canvas.width = 480;
+canvas.height = 480;
+obst = new Array(180, 0, 240, 0, 300, 0, 360, 0, 180, 60, 360, 60, 420, 60, 0, 120, 60, 120, 120, 120, 180, 120, 420, 120, 0, 180, 180, 180, 420, 180, 0, 240, 360, 240, 420, 240, 0, 300, 300, 300, 360, 300, 0, 360, 60, 360, 300, 360, 60, 420, 120, 420, 180, 420, 240, 420, 300, 420);
+korob = new Array(240, 180, 300, 180, 240, 300)
+d = new Array(60, 180, 60, 300, 120, 360)
+main1 = new main(300, 60)
+}
+
+if(level==12) {
+canvas.width = 480;
+canvas.height = 360;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 0, 60, 240, 60, 300, 60, 360, 60, 420, 60, 0, 120, 420, 120, 0, 180, 420, 180, 0, 240, 420, 240, 0, 300, 60, 300, 120, 300, 180, 300, 240, 300, 300, 300, 360, 300, 420, 300, 180, 180, 300, 180);
+korob = new Array(120, 120, 240, 180, 300, 240)
+d = new Array(120, 60, 180, 60, 240, 240)
+main1 = new main(120, 240)
+}
+
+if(level==13) {
+canvas.width = 420;
+canvas.height = 480;
+obst = new Array(120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 0, 60, 60, 60, 120, 60, 360, 60, 0, 120, 360, 120, 0, 180, 360, 180, 0, 240, 360, 240, 0, 300, 300, 300, 360, 300, 0, 360, 240, 360, 300, 360, 0, 420, 60, 420, 120, 420, 180, 420, 240, 420, 240, 120, 180, 240);
+korob = new Array(120, 120, 120, 180, 180, 180)
+d = new Array(300, 60, 120, 180, 120, 240)
+main1 = new main(240, 240)
+}
+
+if(level==14) {
+canvas.width = 480;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 0, 60, 360, 60, 0, 120, 360, 120, 420, 120, 0, 180, 420, 180, 0, 240, 420, 240, 0, 300, 60, 300, 120, 300, 180, 300, 420, 300, 180, 360, 240, 360, 300, 360, 360, 360, 420, 360, 240, 120, 120, 180, 300, 240);
+korob = new Array(180, 120, 240, 180, 240, 240)
+d = new Array(60, 60, 300, 60, 300, 180)
+main1 = new main(240, 60)
+}
+
+if(level==15) {
+canvas.width = 420;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 0, 60, 240, 60, 300, 60, 360, 60, 0, 120, 360, 120, 0, 180, 360, 180, 0, 240, 360, 240, 0, 300, 60, 300, 300, 300, 360, 300, 60, 360, 120, 360, 180, 360, 240, 360, 300, 360, 120, 120, 180, 240);
+korob = new Array(180, 120, 240, 120, 120, 240)
+d = new Array(60, 60, 60, 120, 180, 60)
+main1 = new main(240, 180)
+}
+
+if(level==16) {
+canvas.width = 420;
+canvas.height = 480;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 0, 60, 240, 60, 300, 60, 360, 60, 0, 120, 360, 120, 0, 180, 360, 180, 0, 240, 360, 240, 0, 300, 60, 300, 240, 300, 300, 300, 360, 300, 60, 360, 240, 360, 60, 420, 120, 420, 180, 420, 240, 420, 120, 120, 240, 180);
+korob = new Array(120, 240, 180, 240, 240, 240)
+d = new Array(60, 60, 120, 180, 180, 240)
+main1 = new main(120, 300)
+}
+
+if(level==17) {
+canvas.width = 480;
+canvas.height = 420;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 360, 0, 420, 0, 0, 60, 420, 60, 0, 120, 420, 120, 0, 180, 420, 180, 0, 240, 60, 240, 120, 240, 180, 240, 240, 240, 420, 240, 240, 300, 420, 300, 240, 360, 300, 360, 360, 360, 420, 360, 120, 120, 240, 120);
+korob = new Array(120, 180, 300, 180, 360, 240)
+d = new Array(60, 60, 300, 60, 360, 180)
+main1 = new main(60, 180)
+}
+
+if(level==18) {
+canvas.width = 480;
+canvas.height = 480;
+obst = new Array(0, 0, 60, 0, 120, 0, 180, 0, 0, 60, 180, 60, 0, 120, 180, 120, 240, 120, 300, 120, 360, 120, 420, 120, 0, 180, 420, 180, 0, 240, 60, 240, 420, 240, 60, 300, 300, 300, 360, 300, 420, 300, 60, 360, 300, 360, 60, 420, 120, 420, 180, 420, 240, 420, 300, 420, 180, 300);
+korob = new Array(180, 180, 120, 240, 240, 300)
+d = new Array(120, 180, 180, 180, 120, 360)
+main1 = new main(240, 360)
+}
+
+if(level==19) {
+canvas.width = 480;
+canvas.height = 420;
+obst = new Array(60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 60, 60, 300, 60, 360, 60, 420, 60, 0, 120, 60, 120, 420, 120, 0, 180, 420, 180, 0, 240, 60, 240, 300, 240, 360, 240, 420, 240, 60, 300, 300, 300, 60, 360, 120, 360, 180, 360, 240, 360, 300, 360, 180, 240);
+korob = new Array(180, 180, 300, 180, 120, 240)
+d = new Array(180, 120, 60, 180, 240, 180)
+main1 = new main(180, 60)
+}
+
+if(level==20) {
+canvas.width = 420;
+canvas.height = 480;
+obst = new Array(60, 0, 120, 0, 180, 0, 240, 0, 300, 0, 0, 60, 60, 60, 300, 60, 0, 120, 300, 120, 0, 180, 300, 180, 360, 180, 0, 240, 360, 240, 0, 300, 60, 300, 360, 300, 60, 360, 300, 360, 360, 360, 60, 420, 120, 420, 180, 420, 240, 420, 300, 420, 180, 120, 180, 300);
+korob = new Array(120, 120, 120, 240, 240, 300)
+d = new Array(120, 180, 120, 240, 120, 360)
+main1 = new main(240, 180)
+}
+
+if(level==21) {
+canvas.width = 480;
+canvas.height = 420;
+obst = new Array(60, 0, 120, 0, 180, 0, 240, 0, 0, 60, 60, 60, 240, 60, 300, 60, 360, 60, 420, 60, 0, 120, 420, 120, 0, 180, 420, 180, 0, 240, 420, 240, 0, 300, 60, 300, 120, 300, 180, 300, 240, 300, 420, 300, 240, 360, 300, 360, 360, 360, 420, 360, 120, 180, 240, 240);
+korob = new Array(180, 120, 180, 180, 300, 180)
+d = new Array(60, 120, 120, 120, 360, 120)
+main1 = new main(60, 240)
+}
+
+function obstacle(x, y) {
+this.x1 = x;
+this.y1 = y;
+this.img1 = kirpic; 
+}
+
+obstacles = [];
+
+for(i=0; i<obst.length-1; i=i+2) {
+window["obst" + i] = new obstacle(obst[i], obst[i+1]);
+obstacles.push(window["obst" + i]);
+}
+
+function korobka(x2, y2) {
+this.x2 = x2;
+this.y2 = y2;
+this.img2 = box; 
+}
+
+boxes = []
+
+for(i=0; i<korob.length-1; i=i+2) {
+window["korob" + i] = new korobka(korob[i], korob[i+1])
+boxes.push(window["korob" + i]);
+}
+
+function dot(x3, y3) {
+this.x3 = x3;
+this.y3 = y3;
+this.img3 = goal; 
+}
+
+goals = []
+
+for(i=0; i<d.length-1; i=i+2) {
+window["d"+i] = new dot(d[i], d[i+1])
+goals.push(window["d"+i]);
+
+}
+
+function main(x4, y4) {
+this.x4 = x4;
+this.y4 = y4;
+this.img4 = pers; 
+
+}
+
+character = []
+
+character.push(main1);
+
+draw();
+}
+
+function draw() {
+
+context.clearRect(0, 0, canvas.width, canvas.height)
+
+for (k=0; k<=goals.length-1; k++) {
+context.drawImage(goals[k].img3, goals[k].x3, goals[k].y3)
+}
+
+
+for (i=0; i<=obstacles.length-1; i++) {
+context.drawImage(obstacles[i].img1, obstacles[i].x1, obstacles[i].y1)
+}
+
+for (j=0; j<=boxes.length-1; j++) {
+context.drawImage(boxes[j].img2, boxes[j].x2, boxes[j].y2)
+}
+
+context.drawImage(character[0].img4, character[0].x4, character[0].y4)
+
+}
+
+
+function move(event) {
+
+shag = 60;
+
+positionX = character[0].x4;
+mainX = character[0].x4;
+positionY = character[0].y4; 
+mainY = character[0].y4; 
+
+
+if (event.keyCode==37) 
+	{
+	code = 37;
+	mainX = positionX - shag;
+	coords();
+	if(change==true) {character[0].x4=mainX; draw();}
+	}
+
+if (event.keyCode==38) 
+	{
+	code = 38;
+	mainY = positionY - shag;
+	coords();
+	if(change==true) {character[0].y4=mainY; draw();}
+	}
+
+if (event.keyCode==39) 
+	{
+	code = 39;
+	mainX = positionX + shag;
+	coords();
+	if(change==true) {character[0].x4=mainX; draw();}
+	}
+
+if (event.keyCode==40) 
+	{
+	code = 40;
+	mainY = positionY + shag;
+	coords();
+	if(change==true) {character[0].y4=mainY; draw();}
+	}
+}
+
+
+function coords() {
+
+for (i=0; i<=boxes.length-1; i++) {
+if (boxes[i].x2==mainX && boxes[i].y2==mainY) {cub=true; k=i; break;}
+else cub=false; 
+	}
+
+if (cub==false) {
+for (i=0; i<=obstacles.length-1; i++) {
+if (obstacles[i].x1==mainX && obstacles[i].y1==mainY) {change=false; break;}
+else change=true; 
+		}
+	}
+
+
+else { 
+	change=false
+	kub()
+for (i=0; i<=obstacles.length-1; i++) {
+if (obstacles[i].x1==mainX2 && obstacles[i].y1==mainY2) {change2=false; break;}
+else change2=true; 
+		}
+	
+for (i=0; i<=boxes.length-1; i++) {
+	if (i!=k) {
+		if (boxes[i].x2==mainX2 && boxes[i].y2==mainY2) {change3=false; break;}
+		else change3=true; 
+	    }
+	}
+
+if (change2==true && change3==true) {
+
+		if (what=='left_right') {boxes[k].x2=mainX2; character[0].x4=mainX; draw(); win()}
+
+		else {boxes[k].y2=mainY2; character[0].y4=mainY; draw(); win()}
+
+		}
+
+	}
+}
+
+function kub() {
+
+positionX2 = boxes[k].x2;
+mainX2 = boxes[k].x2
+positionY2 = boxes[k].y2;
+mainY2 =boxes[k].y2
+
+if (code==37) {mainX2 = positionX2 - shag; what='left_right'}
+	
+if (code==38) {mainY2 = positionY2 - shag; what='top_bottom'}
+	
+if (code==39) {mainX2 = positionX2  + shag; what='left_right'}
+	
+if (code==40) {mainY2 = positionY2 + shag; what='top_bottom'}	
+	
+}
+
+function win() {
+
+	place1=false; place2=false; place3=false;
+
+	for (i=0; i<=goals.length-1; i++) {
+        
+	if (boxes[0].x2==goals[i].x3 && boxes[0].y2==goals[i].y3) {place1=true; num1=i;}
+
+		}
+
+	for (i=0; i<=goals.length-1; i++) {
+        
+	if (boxes[1].x2==goals[i].x3 && boxes[1].y2==goals[i].y3 && i!=num1) {place2=true; num2=i;}
+
+		}
+
+	for (i=0; i<=goals.length-1; i++) {
+        
+	if (boxes[2].x2==goals[i].x3 && boxes[2].y2==goals[i].y3 && i!=num1 && i!=num2) {place3=true;}
+
+		}
+
+	if(place1==true && place2==true && place3==true) {level++; begining()}
+       
+}
+
+</script>
